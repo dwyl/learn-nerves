@@ -9,8 +9,12 @@ A complete tutorial of how to deploy a Nerves application on a Raspberry Pi
 
 ## Why?
 
-Nerves is a simple to use IoT framework thats rock-solid thanks to it running on the BEAM (Erlang virtual machine). However, in order to start building
-and working on systems its useful to have a knowledge of how the whole framework fits together and how it interacts with the wider Elixir ecosystem.
+Nerves is a simple to use (IoT) framework 
+that is rock-solid thanks to it running on the BEAM (Erlang virtual machine). 
+However, in order to start building
+and working on systems it's useful to have a knowledge 
+of how the whole framework fits together 
+and how it interacts with the wider Elixir ecosystem.
 
 Although I have refered to Nerves as a framework, Nerves is better described as a **platform**, in that you write pure Elixir code and almost never
 call Nerves functions. Nerves packages up your code and creates Linux firmware image that includes everything you need and nothing more. When the Raspberry
@@ -49,45 +53,87 @@ These instructions will demonstrate how to get started from scratch.
 
 ### 0. Pre-requisites
 
-1. #### Elixir needs to be installed on your **local machine**
-   
-   https://elixir-lang.org/install.html
+1. Ensure you have `Elixir` installed on your **`localhost`** (_main computer_)
+see: 
+[elixir-lang.org/install](https://elixir-lang.org/install.html) <br />
 
-2. #### Nerves needs to be installed.
-   Nerves is a pain to configure on some systems, and needs specific versions of Erlang/OTP. The offical documentation is excellent, so I suggest you follow
-   that here: https://hexdocs.pm/nerves/installation.html
+Check by running the following command in your terminal: <br />
+```sh
+elixir -v
+```
+You should see:
+```
+Erlang/OTP 23 [erts-11.0] [source] [64-bit] [smp:8:8] [ds:8:8:10] [async-threads:1]
+Elixir 1.10.3 (compiled with Erlang/OTP 22)
+```
+If your version is _higher_ than `1.10.3` that's _good_! 
 
-   **NOTE: Current documentation seems to be outdated? Try using latest versions of both Erlang and elixir** then run:
-   ```
-   mix archive.install hex nerves_bootstrap
-   ```
+2. Install Nerves on your **`localhost`**.
+Follow the offical documentation
+to install it on your operating system:
+https://hexdocs.pm/nerves/installation.html
 
-3. #### SSH Keys must be setup
-   Nerves expects you to have public SSH keys setup under `$HOME/.ssh`. This is so we can remotely debug
-   and upload firmware later. If you don't have ssh keys setup, run `ssh-keygen` and accept all the defaults.
+e.g on Mac you need install a few build utilities
+in order to compile your IoT App for the target device.
+Using [Homebrew](https://brew.sh) run the following commands:
 
-4. #### Equipment needed
-   We're going to be using a Raspberry Pi Zero and an external LED. This is a *deliberate* choice to help teach you how the entire system fits together.
-   If you want to use the internal LED, I recommend looking at the Nerve's platform example `Blinky` project here: https://github.com/nerves-project/nerves_examples/tree/main/blinky
+```sh
+brew update
+brew install fwup squashfs coreutils xz pkg-config
+```
 
-   * Raspberry Pi - any version will do. Ideally one with WiFi, but if not and you have a working ethernet connection thats fine.
-   * LED. - Something like one of [these](https://thepihut.com/products/ultimate-5mm-led-kit) but any should do
-   * 330 ohm resistor
-   * A breadboard
+Once you have all the build tools installed,
+run the following command to install `nerves_bootstrap`:
+```
+mix archive.install hex nerves_bootstrap
+```
+<!-- return to this if/when needed during deployment
+3. Ensure you have **SSH Keys**.
+   Nerves expects you to have SSH keys setup under `$HOME/.ssh`. 
+   This is so we can remotely debug and upload firmware later. 
+   If you don't have ssh keys setup, 
+   run `ssh-keygen` and accept all the defaults.
+-->
+3. **Equipment needed**:
+   we're using a 
+   [**Raspberry Pi Zero**](https://www.raspberrypi.org/products/raspberry-pi-zero)
+   and an _external_ LED. 
+   This is a *deliberate* choice to show
+   how the entire system fits together.
+   Any Recent Raspberry Pi will work,
+   we use the Pi Zero because it's the _cheapest_ one.
+
+   > If you want to use the _internal_ LED on your Raspberry Pi,
+   see the example on the Nerve's platform `Blinky` project: 
+   https://github.com/nerves-project/nerves_examples/tree/main/blinky
+
+   * Raspberry Pi - any version will work.
+   * 1 LED - Something like one of these form Pi Hut: 
+   https://thepihut.com/products/ultimate-5mm-led-kit
+   * 1 330 ohm resistor - without the resistor your LED will burn out!
+   * a breadboard
    * Two jumper wires
    
-   The resistor is **very** important,  as the LED has almost no internal resistance it could seriously damage your Raspberry Pi as it will try and draw
-   an unlimited amout of current.
+   The resistor is **very** important
+   as the LED has almost no internal resistance 
+   it could seriously damage your Raspberry Pi 
+   as it will try and draw an unlimited amout of current.
 
-### 1. Wiring Up.
 
-*(Uses content from the Pi Hut, found at https://thepihut.com/blogs/raspberry-pi-tutorials/27968772-turning-on-an-led-with-your-raspberry-pis-gpio-pins)*
+### 1. Wiring Up
 
-We need to connect the led to the Raspberry Pi. You pi should have a load of pins on the side that looks like this:
-![Raspberry Pi Pin Layout](https://cdn.shopify.com/s/files/1/0176/3274/files/Pins_Only_grande.png?2408547127755526599)
-*Pi Hut*
+> **Note**: this section uses content from the Pi Hut, found at: 
+https://thepihut.com/blogs/raspberry-pi-tutorials/27968772-turning-on-an-led-with-your-raspberry-pis-gpio-pins
 
-We need to use a GPIO pin, which when turned *on* outputs 3.3v and a ground pin, which is at a constant 0v. For this guide, we'll use **Pin 18**
+We need to connect the led to the Raspberry Pi. 
+Your Pi should have a load of pins on the side that looks like this:
+
+![Raspberry Pi Pin Layout](https://cdn.shopify.com/s/files/1/0176/3274/files/Pins_Only_grande.png?2408547127755526599 "Image credit: Pi Hut")
+
+To power the LED we will need to use a General Purpose Input/Output (GPIO) pin,
+which when turned *on* outputs 3.3v 
+and a ground pin which is at a constant 0v. 
+For this guide, we'll use **Pin 18**.
 
 Wire everything up like this:
 
@@ -99,12 +145,14 @@ The "black" wire needs to be plugged into a ground pin, and the "orange wire" ne
 
 ### 2. Creating a nerves application.
 
-If you managed to install Nerves correctly in Step #0, you should be able to create a new Nerves application by running
+If you managed to install Nerves correctly in Step #0, 
+you should be able to create a new Nerves application by running:
 
-```
+```sh
 mix nerves.new smart_led
 ```
-where `smart_led` is the name of our project.
+
+where **`smart_led`** is the name of our project.
 
 Say yes when it asks to install required dependencies.
 
@@ -131,46 +179,98 @@ dependencies to point to desired system's package.
 Whats a target? The nerves documentation says:
 >The platform for which your firmware is built (for example, Raspberry Pi, Raspberry Pi 2, or Beaglebone Black).
 
-From this we can see that we need to specify a target to develop our application for. We ovbiously want to be able to develop on our current computer, but 
-run the finished code on our deployment target, Nerves has a solution for this!. Our current, and default target is `host`, or our current computer.
+From this we can see that we need to specify a target 
+to develop our application for. 
+We want to be able to develop on our current computer, 
+but run the finished code on our deployment target. 
+Nerves has a solution for this. 
+Our current, and default target is `host`, or our current computer.
 This means we can easily test and run our nerves code in development. 
 
-Open a new terminal tab. We'll use two terminal tabs, one with our `MIX_TARGET` var set to `host` to develop with, and one with our `MIX_TARGET` set to the 
-device your going to deploy on. Lets visit the link that was suggested to us, https://hexdocs.pm/nerves/targets.html#content, and pick our target tag.
+Open a new terminal tab. 
+We'll use two terminal tabs, 
+one with our `MIX_TARGET` var set to `host` to develop with, 
+and one with our `MIX_TARGET` set to the 
+device your going to deploy on. 
+Lets visit the link that was suggested to us, 
+https://hexdocs.pm/nerves/targets.html#content, 
+and pick our target tag.
 
-Find your device tag, this will look something like `rpi3` and lets use it to setup your new terminal tab.
+Find your device tag, this will look something like `rpi3` 
+and lets use it to setup your new terminal tab.
 
 ```
 export MIX_TARGET=<Your tag>
 ```
 
-Perfect!.
+In our case we are using a Raspberry Pi Zero (Zero W to be precise),
+so our `export` is:
 
 ```
-Now download the dependencies and build a firmware archive:
-  $ cd smart_led
-  $ mix deps.get
-  $ mix firmware
+export MIX_TARGET=rpi0
+```
 
-If your target boots up using an SDCard (like the Raspberry Pi 3),
+
+Now download the dependencies and build a firmware archive:
+
+```
+cd smart_led
+mix deps.get
+```
+
+You should see output similar to the following:
+
+```
+Nerves environment
+  MIX_TARGET:   rpi0
+  MIX_ENV:      dev
+
+Resolving Nerves artifacts...
+  Resolving nerves_system_rpi0
+  => Trying https://github.com/nerves-project/nerves_system_rpi0/releases/download/v1.12.1/nerves_system_rpi0-portable-1.12.1-0D8B7B0.tar.gz
+|==================================================| 100% (141 / 141) MB
+  => Success
+  Resolving nerves_toolchain_armv6_rpi_linux_gnueabi
+  => Trying https://github.com/nerves-project/toolchains/releases/download/v1.3.2/nerves_toolchain_armv6_rpi_linux_gnueabi-darwin_x86_64-1.3.2-CDA7B05.tar.xz
+|==================================================| 100% (55 / 55) MB
+  => Success
+```
+
+This tells us that the nerves toolchain for compiling for the Raspberry Pi 
+downloaded successfully.
+
+
+Next run:
+```
+mix firmware
+```
+
+If your target boots up using an SDCard (like the Raspberry Pi),
 then insert an SDCard into a reader on your computer and run:
-  $ mix firmware.burn
+
+```
+mix firmware.burn
+```
 
 Plug the SDCard into the target and power it up. See target documentation
 above for more information and other targets.
 ```
 If you want, you can run these commands from the generator in your new terminal window to confirm everyting works. We'll do this in a few steps time anyway
 
+
 ### 3. Simple blinking LED module
 
-Open up the project folder we just created in your favourite code editor, in my case I ran
+Open up the project folder we just created in your favourite code editor, 
+in our case we ran:
 
 ```
-code smart_led/ # open the project in VSCode
+code smart_led/ # open the project in VSCodium
 ```
 
-In this folder you'll find the standard Elixir/Mix project layout. We'll leave the `config` folder for now as 
-Nerves ships with some sane defaults. In the next chapter we'll look at adding `target` specific configs and features.
+In this folder you'll find the standard Elixir/Mix project layout. 
+We'll leave the `config` folder for now as 
+Nerves ships with some sane defaults. 
+In the next chapter we'll look at adding `target` specific configs and features.
 
 If you look in the `lib/smart_led` folder and open `application.ex` you'll find a supervisor tree that looks a little different than usual. Take the time
 to read through the comments in this file. There are 3 lists defined in this file, one for Children for all targets,

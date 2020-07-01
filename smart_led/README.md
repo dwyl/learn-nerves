@@ -1,6 +1,8 @@
 # SmartLed
 
-**TODO: Add description**
+See main 
+[`README.md`](https://github.com/dwyl/learn-nerves)
+for details of _why_ we made this app.
 
 ## Targets
 

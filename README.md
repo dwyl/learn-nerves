@@ -82,21 +82,22 @@ brew update
 brew install fwup squashfs coreutils xz pkg-config
 ```
 
-> In case you are curious what all those packages are (_as we were_), see: <br />
-+ [`fwup`](https://github.com/fhunleth/fwup) 
+> In case you are curious what all those packages are (_as we were_), 
+here's a summary: <br />
+> + [`fwup`](https://github.com/fhunleth/fwup) 
 is a configurable image-based software update utility 
 for embedded Linux-based systems. 
 It primarily supports software upgrade strategies 
 that update entire root filesystem images at once.
-+ [`squashfs`](https://en.wikipedia.org/wiki/SquashFS)
+> + [`squashfs`](https://en.wikipedia.org/wiki/SquashFS)
 is a compressed read-only file system for Linux.
-+ [`coreutils`](https://wiki.debian.org/coreutils)
+> + [`coreutils`](https://wiki.debian.org/coreutils)
 are the basic file, shell, and text manipulation utilities 
 of the GNU operating system. 
-+ [`xz`](https://en.wikipedia.org/wiki/XZ_Utils)
+> + [`xz`](https://en.wikipedia.org/wiki/XZ_Utils)
 a lossless data compression file format based on the LZMA algorithm.
 Used to compress the Nerves embedded image during deployment to reduce bandwidth.
-+ [`pkg-config`](https://en.wikipedia.org/wiki/Pkg-config)
+> + [`pkg-config`](https://en.wikipedia.org/wiki/Pkg-config)
 defines and supports a unified interface for querying installed libraries 
 for the purpose of compiling software that depends on them.
 It takes the hassle out of locating libraries required by Nerves
@@ -104,7 +105,8 @@ to compile binaries for your target device.
 
 
 Once you have all the build tools installed,
-run the following command to install `nerves_bootstrap`:
+run the following command to install 
+[`nerves_bootstrap`](https://github.com/nerves-project/nerves_bootstrap):
 ```
 mix archive.install hex nerves_bootstrap
 ```
@@ -146,15 +148,24 @@ mix archive.install hex nerves_bootstrap
 > **Note**: this section uses content from the Pi Hut, found at: 
 https://thepihut.com/blogs/raspberry-pi-tutorials/27968772-turning-on-an-led-with-your-raspberry-pis-gpio-pins
 
-To connect the led to the Raspberry Pi,
-we are going to use General Purpose Input/Output (GPIO) pins.
+To connect the LED to the Raspberry Pi,
+we are going to use the **General Purpose Input/Output** (GPIO) pins.
 The GPIO pins (_or holes in the case of the Pi Zero_) 
 are located on the right of the board:
 
-![Raspberry-Pi-GPIO-Pinout-Diagram-2](https://user-images.githubusercontent.com/194400/86216267-af030580-bb75-11ea-89c8-11763e41b884.png "Click to enlarge")
+![Raspberry-Pi-GPIO-Pinout-Diagram](https://user-images.githubusercontent.com/194400/86216267-af030580-bb75-11ea-89c8-11763e41b884.png "Click to enlarge")
+
+On the Pi Zero (or Zero W) the GPIO layout is identical:
+
+![Raspberry-Pi-Zero-GPIO-Pinout-Diagram](https://user-images.githubusercontent.com/194400/86217567-909e0980-bb77-11ea-9acc-6db5f5797457.png)
+
+If any of these keywords are unfamiliar to you,
+Google is your friend. 
 
 For more info, see: 
 https://www.raspberrypi.org/documentation/usage/gpio
+
+
 
 
 To power the LED we will need to use a GPIO pin,
@@ -181,24 +192,29 @@ mix nerves.new smart_led
 
 where **`smart_led`** is the name of our project.
 
-Say yes when it asks to install required dependencies.
+When prompted to install required dependencies,
+type <kbd>Y</kbd> followed by <kbd>Enter</kbd> to install everything.
 
 Lets break down the message returned by the project generator:
 
 ```
 Your Nerves project was created successfully.
 ```
-Yay! - If you get any errors here, ready them carefully, it will normally say what went wrong. If your still unsure, create an issue.
+Yay! - If you get any errors here, 
+ready them carefully, it will normally say what went wrong. <br />
+If you are still unsure, please create an issue.
 
 ```
-You should now pick a target. See https://hexdocs.pm/nerves/targets.html#content
-for supported targets. If your target is on the list, set `MIX_TARGET`
-to its tag name:
+You should now pick a target. 
+See https://hexdocs.pm/nerves/targets.html#content
+for supported targets. 
+If your target is on the list, 
+set `MIX_TARGET` to its tag name:
 
-For example, for the Raspberry Pi 3 you can either
-  $ export MIX_TARGET=rpi3
+For example, for the Raspberry Pi Zero you can either
+  $ export MIX_TARGET=rpi0
 Or prefix `mix` commands like the following:
-  $ MIX_TARGET=rpi3 mix firmware
+  $ MIX_TARGET=rpi0 mix firmware
 
 If you will be using a custom system, update the `mix.exs`
 dependencies to point to desired system's package.
@@ -220,17 +236,17 @@ one with our `MIX_TARGET` var set to `host` to develop with,
 and one with our `MIX_TARGET` set to the 
 device your going to deploy on. 
 Lets visit the link that was suggested to us, 
-https://hexdocs.pm/nerves/targets.html#content, 
+https://hexdocs.pm/nerves/targets.html#content 
 and pick our target tag.
 
-Find your device tag, this will look something like `rpi3` 
-and lets use it to setup your new terminal tab.
+Find your device tag, this will look something like `rpi0` 
+and use it to setup the second terminal tab.
 
 ```
 export MIX_TARGET=<Your tag>
 ```
 
-In our case we are using a Raspberry Pi Zero (Zero W to be precise),
+In our case we are using a Raspberry Pi Zero W,
 so our `export` is:
 
 ```
@@ -263,9 +279,9 @@ Resolving Nerves artifacts...
   => Success
 ```
 
-This tells us that the nerves toolchain for compiling for the Raspberry Pi 
+This tells us that the nerves toolchain 
+for compiling for the Raspberry Pi 
 downloaded successfully.
-
 
 Next run:
 ```
@@ -279,10 +295,20 @@ then insert an SDCard into a reader on your computer and run:
 mix firmware.burn
 ```
 
-Plug the SDCard into the target and power it up. See target documentation
-above for more information and other targets.
+You will see something similar to this in your terminal:
+
 ```
-If you want, you can run these commands from the generator in your new terminal window to confirm everyting works. We'll do this in a few steps time anyway
+Building /Users/yourname/smart_led/_build/rpi0_dev/nerves/images/smart_led.fw...
+Use 15.05 GiB memory card found at /dev/rdisk4? [Yn] y
+100% [====================================] 31.75 MB in / 34.24 MB out
+Success!
+Elapsed time: 9.024 s
+n@MBP smart_led %
+```
+
+Plug the SDCard into the target and power it up. 
+
+
 
 
 ### 3. Simple blinking LED module
@@ -295,34 +321,59 @@ code smart_led/ # open the project in VSCodium
 ```
 
 In this folder you'll find the standard Elixir/Mix project layout. 
-We'll leave the `config` folder for now as 
-Nerves ships with some sane defaults. 
-In the next chapter we'll look at adding `target` specific configs and features.
+We'll leave the `config` folder for now 
+as  Nerves ships with some sane defaults. 
+In the next chapter we'll look at adding `target` 
+specific configs and features.
 
-If you look in the `lib/smart_led` folder and open `application.ex` you'll find a supervisor tree that looks a little different than usual. Take the time
-to read through the comments in this file. There are 3 lists defined in this file, one for Children for all targets,
-one for Children for the host, and one for any other targets. This lets us fine tune how are processes run.
+If you look in the `lib/smart_led` folder 
+and open `application.ex` 
+you'll find a supervisor tree 
+that looks a little different than usual. 
+Take the time to read through the comments in this file. 
+There are 3 lists defined in this file, 
+one for Children for all targets,
+one for Children for the host, 
+and one for any other targets. 
+This lets us fine tune how are processes run.
 
-We want to be able to blink an LED, this won't work on the host computer so we only want to run it on the target. To
-do this lets define a child process in the last function for our targets like so:
+We want to be able to blink an LED, 
+this won't work on the host computer 
+so we only want to run it on the target. 
+To do this lets define a child process 
+in the last function for our targets like so:
+
 ```elixir
-  def children(_target) do
-    [
-      SmartLed.LedController
-    ]
-  end
-
+def children(_target) do
+  [
+    SmartLed.LedController
+  ]
+end
 ```
-By doing this the BEAM will start and supervise the `SmartLed.LedController` module when our application starts.
+
+> e.g: 
+[`smart_led/lib/smart_led/application.ex#L17`](https://github.com/dwyl/learn-nerves/blob/36fe7eb10e8b93771bc1dee7e59608abe698c828/smart_led/lib/smart_led/application.ex#L17)
+
+
+
+
+By doing this the BEAM will start and supervise 
+the `SmartLed.LedController` module when our application starts.
 If it crashes, it will just get restarted and we won't have to worry.
 
-If we run the application now it won't work as we haven't defined the module `SmartLed.LedController` yet, so lets do that now.
+If we attempt to run the application now 
+it won't work as we haven't yet defined the module `SmartLed.LedController`.
+Lets do that now.
 
-Create a new file called `led_controller.ex` in the same file as the as the application module we just looked at. In
-in this file we are going to define a `GenServer` that will control our lights. This will help us call our lights 
+Create a new file with the path
+[`lib/smart_led/led_controller.ex`](https://github.com/dwyl/learn-nerves/blob/36fe7eb10e8b93771bc1dee7e59608abe698c828/smart_led/lib/smart_led/led_controller.ex).
+In this file we are going to define a `GenServer` 
+that will control our lights. 
+This will help us call our lights 
 from another process later.
 
-Lets start by defining our standard Elixir boilerplate by creating our module. We'll also `use GenServer` to import
+Start by defining our standard Elixir boilerplate by creating our module. 
+We'll also `use GenServer` to import
 all of the required GenServer functions and define some good defaults.
 
 ```elixir
@@ -339,14 +390,22 @@ so lets do that now.
     {:ok, opts}
   end
 ```
-`init/1` takes one argument that contains options passed to it by the function that starts the `GenServer`. In the
-function body we send a `:blink` message to ourselves. This will get queued up in our `GenServer`'s mailbox and 
-processed once we're fully set up. We then finish setting up our `GenServer` by telling returning a tuple with the 
-`:ok` message and our `GenServer`'s state, which in this case we'll just set to opts in case we need to access these
-later.
 
-Our GenServer then needs to be able to handle the `:blink` message. `GenServer`s handle incoming messages through
-the `handle_info/2` callback so lets create one for our blink message
+`init/1` takes one argument that contains options 
+passed to it by the function that starts the `GenServer`. 
+In the function body we send a `:blink` message to ourselves. 
+This will get queued up in our `GenServer`'s mailbox 
+and  processed once we're fully set up. 
+We then finish setting up our `GenServer` 
+by telling returning a tuple with the  `:ok` message 
+and our `GenServer`'s state. 
+In this case we'll just set to opts 
+in case we need to access these later.
+
+Our GenServer then needs to be able 
+to handle the `:blink` message. 
+`GenServer`s handle incoming messages through the `handle_info/2` callback 
+so lets create one for our blink message:
 
 ```elixir
   def handle_info(:blink, state) do

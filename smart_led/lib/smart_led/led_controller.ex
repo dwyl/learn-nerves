@@ -21,7 +21,7 @@ defmodule SmartLed.LedController do
   defp blink_led() do
     {:ok, gpio} = GPIO.open(18, :output)
     GPIO.write(gpio, 1)
-    :timer.sleep(100)
+    :timer.sleep(1000)
     GPIO.write(gpio, 0)
     GPIO.close(gpio)
   end

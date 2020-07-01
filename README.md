@@ -82,6 +82,27 @@ brew update
 brew install fwup squashfs coreutils xz pkg-config
 ```
 
+> In case you are curious what all those packages are (_as we were_), see: <br />
++ [`fwup`](https://github.com/fhunleth/fwup) 
+is a configurable image-based software update utility 
+for embedded Linux-based systems. 
+It primarily supports software upgrade strategies 
+that update entire root filesystem images at once.
++ [`squashfs`](https://en.wikipedia.org/wiki/SquashFS)
+is a compressed read-only file system for Linux.
++ [`coreutils`](https://wiki.debian.org/coreutils)
+are the basic file, shell, and text manipulation utilities 
+of the GNU operating system. 
++ [`xz`](https://en.wikipedia.org/wiki/XZ_Utils)
+a lossless data compression file format based on the LZMA algorithm.
+Used to compress the Nerves embedded image during deployment to reduce bandwidth.
++ [`pkg-config`](https://en.wikipedia.org/wiki/Pkg-config)
+defines and supports a unified interface for querying installed libraries 
+for the purpose of compiling software that depends on them.
+It takes the hassle out of locating libraries required by Nerves
+to compile binaries for your target device.
+
+
 Once you have all the build tools installed,
 run the following command to install `nerves_bootstrap`:
 ```
@@ -125,12 +146,18 @@ mix archive.install hex nerves_bootstrap
 > **Note**: this section uses content from the Pi Hut, found at: 
 https://thepihut.com/blogs/raspberry-pi-tutorials/27968772-turning-on-an-led-with-your-raspberry-pis-gpio-pins
 
-We need to connect the led to the Raspberry Pi. 
-Your Pi should have a load of pins on the side that looks like this:
+To connect the led to the Raspberry Pi,
+we are going to use General Purpose Input/Output (GPIO) pins.
+The GPIO pins (_or holes in the case of the Pi Zero_) 
+are located on the right of the board:
 
-![Raspberry Pi Pin Layout](https://cdn.shopify.com/s/files/1/0176/3274/files/Pins_Only_grande.png?2408547127755526599 "Image credit: Pi Hut")
+![Raspberry-Pi-GPIO-Pinout-Diagram-2](https://user-images.githubusercontent.com/194400/86216267-af030580-bb75-11ea-89c8-11763e41b884.png "Click to enlarge")
 
-To power the LED we will need to use a General Purpose Input/Output (GPIO) pin,
+For more info, see: 
+https://www.raspberrypi.org/documentation/usage/gpio
+
+
+To power the LED we will need to use a GPIO pin,
 which when turned *on* outputs 3.3v 
 and a ground pin which is at a constant 0v. 
 For this guide, we'll use **Pin 18**.

@@ -366,15 +366,17 @@ it won't work as we haven't yet defined the module `SmartLed.LedController`.
 Lets do that now.
 
 Create a new file with the path
-[`lib/smart_led/led_controller.ex`](https://github.com/dwyl/learn-nerves/blob/36fe7eb10e8b93771bc1dee7e59608abe698c828/smart_led/lib/smart_led/led_controller.ex).
-In this file we are going to define a `GenServer` 
+[`lib/smart_led/led_controller.ex`](https://github.com/dwyl/learn-nerves/blob/36fe7eb10e8b93771bc1dee7e59608abe698c828/smart_led/lib/smart_led/led_controller.ex) <br />
+In this file we are going to define a 
+[`GenServer`](https://hexdocs.pm/elixir/GenServer.html)
 that will control our lights. 
-This will help us call our lights 
+Having a `GenServer` will help us call our lights 
 from another process later.
 
-Start by defining our standard Elixir boilerplate by creating our module. 
-We'll also `use GenServer` to import
-all of the required GenServer functions and define some good defaults.
+Start by defining our standard `Elixir` boilerplate by creating our module. <br />
+Add `use GenServer` to import
+all of the required `GenServer` functions 
+and define some good defaults.
 
 ```elixir
 defmodule SmartLed.LedController do
@@ -382,7 +384,9 @@ defmodule SmartLed.LedController do
 end
 ```
 
-Those of you with well setup errors will get a linting error now as `GenServer` expects `init/1` to be defined, 
+Those of you with well setup errors 
+will get a linting error now as 
+`GenServer` expects `init/1` to be defined, 
 so lets do that now. 
 ```elixir
   def init(_opts) do
@@ -402,7 +406,7 @@ and our `GenServer`'s state.
 In this case we'll just set to opts 
 in case we need to access these later.
 
-Our GenServer then needs to be able 
+Our `GenServer` then needs to be able 
 to handle the `:blink` message. 
 `GenServer`s handle incoming messages through the `handle_info/2` callback 
 so lets create one for our blink message:
@@ -413,7 +417,7 @@ so lets create one for our blink message:
     blink_led()
 
     {:noreply, state}
-  end
+  end 
 ```
 Lets break this down line by line:
 
@@ -422,20 +426,25 @@ Lets break this down line by line:
 * We call a (as yet undeclared) function to blink our led
 * We return control to the `GenSever`, saying we don't want to reply and with our state
 
-To Blink the LED we need to a library to call to run the barebones code of telling the Raspberry Pi to open and 
-and close the GPIO Pin. Luckily, Elixir Circuits will do this for us. Add `{:circuits_gpio, "~> 0.4"}` to
-your mix deps in `~mix.exs` like so
+To Blink the LED we need to call a library 
+to run the barebones code of telling the Raspberry Pi 
+to open and  and close the GPIO Pin. 
+Luckily, Elixir Circuits will do this for us. 
+Add `{:circuits_gpio, "~> 0.4"}` to
+your mix deps in `mix.exs` like so:
 
 ```elixir
 defp deps do
-    [
-      ...
-      {:circuits_gpio, "~> 0.4"},
-      ...
-    ]
+  [
+    ...
+    {:circuits_gpio, "~> 0.4"},
+    ...
+  ]
 ```
-We don't need to worry about only using this on specific targets as Circuits automatically works out on what
-type of device its running on. Lets go back to our code and implement our LED Blinking.
+
+We don't need to worry about only using this on specific targets 
+as Circuits automatically works out on what type of device its running on. 
+Lets go back to our code and implement our LED Blinking.
 
 We need to define `blink_led/0`:
 
@@ -450,16 +459,19 @@ We need to define `blink_led/0`:
     GPIO.close(gpio)
   end
 ```
-Once again, lets break this down line by line.
-* We first create a reference to a GPIO pin so we can access it later, if you used a pin other that 18 earlier, feel
-  free to change it
-* We then write "1" to this pin, effectively turning it on
-* We then pause execution for 100ms, leavingt the led light on.
-* We then write "0" to the pin, effectievly turning it off.
-* Finally we close the reference to the pin, letting the BEAM know we can safely derefence this pin.
 
-Finally, we need to write one more function that will connect our new `GenServer` to the application supervisor,
-if you've written `GenServers` before this will look very familiar
+Once again, lets break this down line by line.
+* We first create a reference to a GPIO pin so we can access it later, 
+if you used a pin other that 18 earlier, feel free to change it
+* We then write "1" to this pin, effectively turning it on
+* We then pause execution for 100ms, leaving the led light on.
+* We then write "0" to the pin, effectively turning it off.
+* Finally we close the reference to the pin, 
+letting the BEAM know we can safely dereference this pin.
+
+Finally, we need to write one more function 
+that will connect our new `GenServer` to the application supervisor,
+if you have written `GenServers` before this will look very familiar
 
 ```elixir
   def start_link(opts) do
@@ -467,12 +479,14 @@ if you've written `GenServers` before this will look very familiar
   end
 ```
 
-This starts the GenServer process with the current module, gives it the options from the supervisor and names the new
+This starts the `GenServer` process with the current module, 
+gives it the options from the supervisor and names the new
 process the same as the module.
 
 ### 4. Deploying your application.
 
-**In the terminal where you set your `MIX_TARGET` environment variables**, we can build and deploy the firmware.
+**In the terminal where you set your `MIX_TARGET` environment variables**, 
+build and deploy the firmware.
 
 *Lost it? just run `export MIX_TARGET=<Your tag>` again*
 
@@ -481,16 +495,24 @@ First of all, lets download the dependencies for the target
 ```
 mix deps.get
 ```
-This will take a while as it will download the firmware needed for your device.
 
-Then plug in an SD card and run:
+This will take a while 
+as it will download the firmware needed for your device.
+
+Next, Plug your SD card into your main computer and run:
 
 ```
 mix firmware.burn
 ```
 
-It will ask you to confirm the correct SD card, double check this as you could overwrite something important!
+It will ask you to confirm the correct SD card, 
+double check this as you could overwrite something important!
 
-Plug the card into the Pi, turn it on and within 30 seconds it should start to blink!
+Remove the SD Card from your computer
+and insert it into the Raspberry Pi, 
+power up the Pi and within 30 seconds 
+it the LED should start to blink!
 
 # TODO: Add networking and GUI
+
+See: https://github.com/dwyl/learn-nerves/issues/3

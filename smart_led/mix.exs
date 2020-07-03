@@ -40,9 +40,13 @@ defmodule SmartLed.MixProject do
     [
       # Dependencies for all targets
       {:nerves, "~> 1.6.0", runtime: false},
+      # https://github.com/nerves-project/shoehorn (terrible name. necessary to init VM)
       {:shoehorn, "~> 0.6"},
+      # https://github.com/nerves-project/ring_logger in-memory logger with IEx access.
       {:ring_logger, "~> 0.6"},
+      # https://github.com/fhunleth/toolshed collection of useful commands for IEx prompts
       {:toolshed, "~> 0.2"},
+      # https://github.com/elixir-circuits/circuits_gpio control or read from GPIO pins.
       {:circuits_gpio, "~> 0.4"},
 
       # Dependencies for all targets except :host

@@ -26,3 +26,18 @@ config :logger, backends: [RingLogger]
 if Mix.target() != :host do
   import_config "target.exs"
 end
+
+
+# https://elixirschool.com/en/lessons/advanced/nerves/#setting-up-networking
+# Statically assign an address
+config :nerves_network, :default,
+  eth0: [
+    ipv4_address_method: :static,
+    ipv4_address: "192.168.1.101",
+    ipv4_subnet_mask: "255.255.255.0",
+    nameservers: ["8.8.8.8", "8.8.4.4"]
+  ],
+  wlan0: [
+    ssid: System.get_env("NERVES_NETWORK_SSID"),
+    psk: System.get_env("NERVES_NETWORK_PSK")
+  ]

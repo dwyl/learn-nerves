@@ -12,16 +12,17 @@ defmodule SmartLed.LedController do
   end
 
   def handle_info(:blink, state) do
-    Process.send_after(self(), :blink, 2000)
-    blink_led()
+    delay = :rand.uniform(2000)
+    Process.send_after(self(), :blink, 2 * delay)
+    blink_led(delay)
 
     {:noreply, state}
   end
 
-  defp blink_led() do
+  defp blink_led(delay) do
     {:ok, gpio} = GPIO.open(18, :output)
     GPIO.write(gpio, 1)
-    :timer.sleep(1000)
+    :timer.sleep(delay)
     GPIO.write(gpio, 0)
     GPIO.close(gpio)
   end

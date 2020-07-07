@@ -2,12 +2,19 @@
 
 # Nerves LED Blinking tutorial
 
-A complete tutorial of how to deploy a Nerves application on a Raspberry Pi
+A complete beginners' tutorial showing 
+how to deploy an Internet of Things (IoT) project
+to a Raspberry Pi 
+using the Nerves frawework.
+
 </div>
 
 <br></br>
 
 ## Why?
+
+We need a reliable way of deploying 
+
 
 Nerves is a simple to use (IoT) framework 
 that is rock-solid thanks to it running on the BEAM (Erlang virtual machine). 
@@ -16,16 +23,25 @@ and working on systems it's useful to have a knowledge
 of how the whole framework fits together 
 and how it interacts with the wider Elixir ecosystem.
 
-Although I have refered to Nerves as a framework, Nerves is better described as a **platform**, in that you write pure Elixir code and almost never
-call Nerves functions. Nerves packages up your code and creates Linux firmware image that includes everything you need and nothing more. When the Raspberry
-Pi has finished booting Nerves starts your Elixir application and its dependencies.
+Although I have refered to Nerves as a framework, 
+Nerves is better described as a **platform**
+in that you write pure Elixir code and almost never
+call Nerves functions directly. 
+Nerves packages up your code and creates Linux firmware image 
+that includes everything you need and nothing more. 
+When the Raspberry Pi has finished booting 
+Nerves starts your Elixir application and its dependencies.
 
-Nerves includes lots of features such as Over-The-Air firmware updates that means you can truly "fire and forget".
+Nerves includes lots of features such as Over-The-Air firmware updates 
+that means you can easily update your application once it's deployed
+to an inaccessible location.
 
 ## What?
 
-This application is deliberately built with extra features expandability in mind. *There are simpler tutorials* for
-Blinking lights, but we're aiming to give a broad overview of Nerves and Elixir.
+This application is deliberately built 
+with extra features expandability in mind. 
+*There are simpler tutorials* for Blinking lights, 
+but we're aiming to give a broad overview of Nerves and Elixir.
 
 A simple step-by-step that will show you how to:
 - **Create** a Nerves application from scratch
@@ -33,19 +49,27 @@ A simple step-by-step that will show you how to:
 - **Deploy** your application on a Raspberry Pi
 - **Tweaking** your application and redeploying Over-The-Air
 
-*For simple Nerves applications, thats it! But (**Intermediate knowledge of Elixir recommended)** we can also add a web-based GUI by*:
-- **Refractoring** the blinking LED control so we can call it from another BEAM application
+*For simple Nerves applications, thats it! 
+For more advanced Nerves apps, we can also add a web-based GUI by*:
+- **Refactoring** the blinking LED control so we can call it from another BEAM application
 - **Creating** a Nerves **poncho** project structure.
 - **Creating** a simple Phoenix web application.
 - **Implementing** a GUI that switches your light on and off.
 - **Configuring** networking so you can access your application.
 
 ## Who?
-This example is for people who are ***complete beginners*** with Nerves but some Elixir knowledge will be useful for understanding whats going on.
-For the second part of the guide a basic knowledge of how `GenServers` and the BEAM works is recommened, although you should still be able to follow
+
+This example is for people who are ***complete beginners*** with Nerves 
+but have some Elixir knowledge.
+For the second part of the guide 
+a basic knowledge of how `GenServers` and the BEAM works is recommended, 
+although you should still be able to follow
 along and work out whats going on.
 
-If you get stuck, open an *issue* on this GitHub repository and we'll try and fix it. If you get stuck, it's probaly an issue with our guide!
+If you get stuck, please open an 
+[*issue*](https://github.com/dwyl/learn-nerves/issues) 
+on this GitHub repository 
+and we'll try and help any way we can.
 
 ## How?
 
@@ -516,3 +540,13 @@ it the LED should start to blink!
 # TODO: Add networking and GUI
 
 See: https://github.com/dwyl/learn-nerves/issues/3
+
+
+## References and Recommended Reading
+
+
++ From 0 to 11 with Nerves:
+https://nerves.build/posts/nerves-0-11
+(last updated 2017, still has lots of useful info)
++ Get the /dev/tty??? reference for Raspberry PI plugged in via USB:
+https://raspberrypi.stackexchange.com/questions/88079/get-dev-tty-for-raspberry-pi
